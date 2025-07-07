@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio | Salma Nurfauziah</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: SPA dengan navigasi header tetap yang mengarah ke beberapa bagian: Beranda (hero), Tentang, Keterampilan (dengan chart), Proyek (linimasa interaktif), Pengalaman (linimasa interaktif), dan Kontak. Struktur ini dipilih untuk memandu pengguna secara logis melalui cerita Salma, dari pengenalan umum hingga bukti spesifik keahliannya. Linimasa interaktif untuk proyek dan pengalaman memungkinkan pengguna untuk fokus pada periode waktu tertentu, mengurangi kepadatan informasi dan meningkatkan keterlibatan. -->
+    <!-- Visualization & Content Choices: 
+        - Hero Section -> Inform -> Teks perkenalan singkat dengan CTA -> Untuk menarik perhatian.
+        - Skills -> Compare/Inform -> Radar Chart (Chart.js) -> Untuk memvisualisasikan kekuatan di berbagai bidang keterampilan secara ringkas dan menarik. Interaksi: Tooltip saat hover. Justifikasi: Radar chart efektif untuk menampilkan data multi-variabel pada beberapa kategori, cocok untuk portofolio teknologi.
+        - Projects/Experiences -> Change/Organize -> Interactive Vertical Timeline (HTML/CSS/JS) -> Untuk menampilkan kemajuan dari waktu ke waktu. Interaksi: Klik pada tahun untuk menampilkan/menyembunyikan detail. Justifikasi: Linimasa adalah cara intuitif untuk menyajikan data kronologis, membuatnya mudah dicerna dan tidak membanjiri pengguna.
+        - Textual Content -> Inform -> Blok teks terstruktur di setiap bagian -> Untuk memberikan konteks dan detail.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .nav-link.active {
+            color: #C5A48A;
+            font-weight: 600;
+        }
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #E5E7EB;
+            left: 1.25rem;
+            top: 2.5rem;
+            bottom: -1rem;
+            transform: translateX(-50%);
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 1.25rem;
+            top: 1rem;
+            transform: translateX(-50%);
+        }
+        .btn-primary {
+            background-color: #C5A48A;
+            color: #FFFFFF;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #B49070;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #F0F0F0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 500px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="text-xl font-bold text-gray-800">
+                    Salma Nurfauziah
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-600 hover:text-[#C5A48A] transition-colors">Beranda</a>
+                    <a href="#about" class="nav-link text-gray-600 hover:text-[#C5A48A] transition-colors">Tentang</a>
+                    <a href="#skills" class="nav-link text-gray-600 hover:text-[#C5A48A] transition-colors">Keterampilan</a>
+                    <a href="#projects" class="nav-link text-gray-600 hover:text-[#C5A48A] transition-colors">Proyek</a>
+                    <a href="#experience" class="nav-link text-gray-600 hover:text-[#C5A48A] transition-colors">Pengalaman</a>
+                    <a href="#contact" class="nav-link text-gray-600 hover:text-[#C5A48A] transition-colors">Kontak</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                    <span class="w-6 h-6 block">☰</span>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white">
+            <a href="#home" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-50">Beranda</a>
+            <a href="#about" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-50">Tentang</a>
+            <a href="#skills" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-50">Keterampilan</a>
+            <a href="#projects" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-50">Proyek</a>
+            <a href="#experience" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-50">Pengalaman</a>
+            <a href="#contact" class="block py-2 px-4 text-sm text-gray-600 hover:bg-gray-50">Kontak</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="pt-24 pb-16 md:pt-32 md:pb-24">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-gray-900">Salma Nurfauziah</h1>
+                <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Mahasiswa Teknik Informatika dengan minat mendalam pada <span class="font-semibold text-[#C5A48A]">Machine Learning</span>.</p>
+                <p class="mt-2 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Menerapkan teknologi untuk membangun solusi inovatif.</p>
+                <div class="mt-8">
+                    <a href="#projects" class="btn-primary font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-shadow">Lihat Proyek Saya</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">Tentang Saya</h2>
+                    <p class="mt-2 text-lg text-gray-500">Perkenalan singkat tentang perjalanan saya di dunia teknologi.</p>
+                </div>
+                <div class="max-w-4xl mx-auto text-center text-gray-700 leading-relaxed">
+                    <p>
+                        Saya adalah seorang mahasiswa Teknik Informatika yang berdedikasi dengan ketertarikan kuat pada Machine Learning. Saya memiliki pengalaman dalam berbagai proyek pengembangan perangkat lunak, mulai dari aplikasi dasar hingga proyek yang lebih kompleks yang melibatkan analisis data dan implementasi model Machine Learning. Saya selalu mencari peluang untuk belajar, berkolaborasi, dan berkembang di bidang teknologi, mengubah ide-ide kompleks menjadi solusi nyata yang bermanfaat.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="skills" class="py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">Keterampilan Utama</h2>
+                    <p class="mt-2 text-lg text-gray-500">Visualisasi kompetensi teknis dan non-teknis saya.</p>
+                </div>
+                <div class="chart-container">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">Proyek Unggulan</h2>
+                    <p class="mt-2 text-lg text-gray-500">Jelajahi perjalanan teknis saya melalui berbagai proyek yang telah saya kerjakan.</p>
+                </div>
+                <div id="projects-timeline" class="max-w-4xl mx-auto"></div>
+            </div>
+        </section>
+
+        <section id="experience" class="py-16">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900">Pengalaman</h2>
+                    <p class="mt-2 text-lg text-gray-500">Peran dan tanggung jawab yang telah membentuk perjalanan profesional saya.</p>
+                </div>
+                <div id="experience-timeline" class="max-w-4xl mx-auto"></div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">Hubungi Saya</h2>
+                <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Saya terbuka untuk peluang kolaborasi, magang, atau sekadar diskusi menarik mengenai teknologi. Mari terhubung!</p>
+                <div class="mt-8 flex justify-center space-x-6">
+                    <a href="https://www.linkedin.com/in/salma-nurfauziah/" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-[#C5A48A]">
+                        <span class="sr-only">LinkedIn</span>
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
+                    </a>
+                    <a href="https://github.com/slmaaanf" target="_blank" rel="noopener noreferrer" class="text-gray-500 hover:text-[#C5A48A]">
+                        <span class="sr-only">GitHub</span>
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.492.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg>
+                    </a>
+                     <a href="mailto:salmanurfauziah2005@gmail.com" class="text-gray-500 hover:text-[#C5A48A]">
+                        <span class="sr-only">Email</span>
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white">
+        <div class="container mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p>&copy; <span id="year"></span> Salma Nurfauziah. Dibuat dengan semangat.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const projectsData = [
+                { year: 2025, title: 'Project Capstone Bangkit Academy (ArtoZ)', desc: 'ArtoZ adalah aplikasi mobile yang dirancang untuk membantu Gen Z mengelola keuangan pribadi secara efektif. Fitur termasuk pelacakan pengeluaran, pemindaian struk menggunakan OCR, dan sistem rekomendasi pengeluaran yang dipersonalisasi. Solusi ini didukung oleh machine learning untuk memberikan rekomendasi pengeluaran dan melacak tren seiring waktu.', tags: ['Machine Learning', 'OCR', 'Mobile App', 'Bangkit'], link: 'https://github.com/C242-PS044-ArtoZ' },
+                { year: 2025, title: 'Web Laravel EventBloom', desc: 'EventBloom adalah aplikasi berbasis web untuk mengelola dan menemukan acara menarik. Dibangun dengan Laravel untuk skalabilitas dan kemudahan pengembangan. Fitur utama meliputi autentikasi pengguna, manajemen acara (CRUD), visualisasi data dengan chart, antarmuka responsif (Bootstrap 5), dan pengelolaan API.', tags: ['Laravel', 'PHP', 'Web Dev', 'CRUD'], link: 'https://github.com/slmaaanf/Framework-ProjekUAS' },
+                { year: 2025, title: 'Project Dicoding Machine Learning Terapan', desc: 'Menerapkan Machine Learning untuk sistem rekomendasi buku dan memprediksi analisis nutrisi makanan dan minuman. Membangun model regresi untuk memprediksi kandungan kalori makanan tradisional Indonesia (MSE = 0.157) dan mengembangkan sistem rekomendasi makanan sehat berbasis klasifikasi. Mengintegrasikan Content-Based Filtering, SVD Collaborative Filtering, dan model neural network untuk rekomendasi buku personal (Precision@K = 0.5, RMSE = 1.24).', tags: ['Machine Learning', 'Rekomendasi Sistem', 'Prediksi'], link: 'https://github.com/slmaaanf/Machine-Learning-Terapan' },
+                { year: 2025, title: 'Web Magang di Telkom Sukabumi', desc: 'Mengembangkan sistem dashboard magang internal sebagai bagian dari tim 5 orang menggunakan framework Laravel, mengurangi upaya registrasi manual sebesar 40%. Mengintegrasikan Google Drive API untuk fungsionalitas unggah file, menyederhanakan penanganan dokumen untuk lebih dari 60+ peserta magang. Menyempurnakan halaman profil dengan desain UI/UX responsif, meningkatkan kegunaan dan mengurangi waktu rata-rata pembaruan profil sebesar 30%.', tags: ['Web Dev', 'Dashboard', 'Internship'], link: 'https://webmagang.my.id/' },
+                { year: 2025, title: 'Web Laravel Movie', desc: 'Pengembangan situs web berbasis Laravel untuk informasi film, memungkinkan pengguna untuk menjelajahi dan menemukan detail tentang berbagai film.', tags: ['Laravel', 'PHP', 'Web Dev'], link: 'https://github.com/slmaaanf/movie-laravel' },
+                { year: 2025, title: 'Project Dicoding Gunting Kertas Batu', desc: 'Mengimplementasikan permainan Gunting Kertas Batu interaktif sebagai bagian dari kursus Dicoding, menunjukkan pemahaman dasar JavaScript dan interaksi DOM.', tags: ['JavaScript', 'Game Dev'], link: 'https://github.com/slmaaanf/Gunting-kertas-batu' },
+                { year: 2024, title: 'Project Dicoding Analisis Data dengan Python (Bike Sharing Dataset)', desc: 'Menganalisis dataset berbagi sepeda menggunakan Python untuk mendapatkan wawasan tentang pola penggunaan dan faktor-faktor yang memengaruhi permintaan sepeda.', tags: ['Python', 'Analisis Data', 'Pandas', 'Streamlit'], link: 'https://proyek-4n4lisis-akhir.streamlit.app/' },
+                { year: 2024, title: 'Project Dicoding Back End Bookshelf API (AWS)', desc: 'Membangun dan menerapkan RESTful API dengan Node.js dan AWS Lambda, terintegrasi dengan RDS dan S3 untuk mengaktifkan backend yang skalabel dan aman untuk platform e-commerce tiruan. Berfokus pada pengembangan API, desain database, dan praktik otentikasi yang aman.', tags: ['Back-End', 'API', 'AWS', 'Dicoding'], certificate: 'https://www.dicoding.com/certificates/NVP7Q52VGZR0' },
+                { year: 2024, title: 'Project Dicoding Front End Bookshelf App (DBS)', desc: 'Berkolaborasi dalam tim 4 orang untuk merancang dan menerapkan antarmuka aplikasi penganggaran responsif menggunakan React.js, meningkatkan aksesibilitas pengguna di perangkat seluler dan desktop. Berfokus pada pemecahan masalah dan kolaborasi dalam pengembangan frontend.', tags: ['Front-End', 'JavaScript', 'Web App', 'Dicoding'], certificate: 'https://www.dicoding.com/certificates/MRZME891RPYQ' },
+                { year: 2024, title: 'Color Detection dengan Python', desc: 'Proyek yang berfokus pada deteksi warna menggunakan bahasa pemrograman Python, menunjukkan aplikasi dasar pengolahan citra.', tags: ['Python', 'Computer Vision'], link: 'https://github.com/slmaaanf/color-detection' },
+                { year: 2024, title: 'Web Dasar Rak Cerita', desc: 'Pengembangan situs web dasar untuk mengelola dan menampilkan cerita, memperkenalkan konsep dasar HTML dan CSS.', tags: ['HTML', 'CSS', 'Web Dev'], link: 'https://github.com/slmaaanf/Rak-Cerita' },
+                { year: 2024, title: 'Aplikasi Mobile Native (Home, Contact, Details)', desc: 'Pengembangan aplikasi mobile native dengan fitur dasar seperti halaman utama, kontak, dan detail, sebagai pengenalan pengembangan aplikasi seluler.', tags: ['Mobile Dev', 'Native'], link: 'https://github.com/slmaaanf/mobile' },
+                { year: 2023, title: 'Lempar Dadu dengan C++', desc: 'Proyek tugas dasar pemrograman yang mengimplementasikan simulasi lempar dadu menggunakan bahasa C++, menunjukkan pemahaman konsep dasar pemrograman.', tags: ['C++', 'Dasar Pemrograman'], link: 'https://github.com/slmaaanf/Lempar_Dadu' }
+            ];
+
+            const experienceData = [
+                { year: 2025, title: 'Mengikuti Lomba Gammafest IPB 2025', desc: 'Berpartisipasi dalam lomba Data Science di Gammafest IPB, mengasah kemampuan analisis data dan pemecahan masalah dalam kompetisi.', role: 'Peserta Lomba', documentation: 'https://placehold.co/400x300/A0C4FF/FFFFFF?text=Dokumentasi+Gammafest' },
+                { year: 2025, title: 'Asistensi Praktikum Machine Learning', desc: 'Berhasil membimbing mahasiswa dalam konsep dan implementasi Machine Learning, meningkatkan pemahaman praktis mereka.', role: 'Asisten Praktikum', documentation: 'https://placehold.co/400x300/E0BBE4/FFFFFF?text=Dokumentasi+Asistensi+ML' },
+                { year: 2025, title: 'Juara GCP 2025', desc: 'Meraih juara dalam kompetisi Google Cloud Platform Season 11, menyelesaikan proyek AI/ML hands-on menggunakan Google Cloud, termasuk Document AI dan ML APIs (Speech, Vision, NLP), serta menerapkan model ML menggunakan Vertex AI dan menjelajahi Gemini & Imagen untuk AI generatif.', role: 'Peserta', documentation: 'https://placehold.co/400x300/957DAD/FFFFFF?text=Dokumentasi+Juara+GCP' },
+                { year: 2025, title: 'Panitia HARTIK 2025', desc: 'Menjabat sebagai Bendahara Umum, bertanggung jawab atas pengelolaan keuangan acara besar, memastikan transparansi dan efisiensi.', role: 'Bendahara Umum' },
+                { year: 2025, title: 'Magang Telkom', desc: 'Mengembangkan sistem dashboard magang internal sebagai bagian dari tim 5 orang menggunakan framework Laravel, mengurangi upaya registrasi manual sebesar 40%. Mengintegrasikan Google Drive API untuk fungsionalitas unggah file, menyederhanakan penanganan dokumen untuk lebih dari 60+ peserta magang. Menyempurnakan halaman profil dengan desain UI/UX responsif, meningkatkan kegunaan dan mengurangi waktu rata-rata pembaruan profil sebesar 30%.', role: 'Dashboard Developer Intern', documentation: 'https://webmagang.my.id/' },
+                { year: 2024, title: 'Panitia MOTIF 2024', desc: 'Menjabat sebagai Bendahara Umum, mengelola anggaran dan transaksi keuangan acara, berkontribusi pada kesuksesan event.', role: 'Bendahara Umum' },
+                { year: 2024, title: 'HIMA Teknik Informatika 2024/2025', desc: 'Menjabat sebagai Bendahara Umum, mengelola keuangan organisasi mahasiswa, memastikan stabilitas finansial dan mendukung kegiatan anggota.', role: 'Bendahara Umum' },
+                { year: 2024, title: 'AWS Backend 2024', desc: 'Membangun dan menerapkan RESTful API dengan Node.js dan AWS Lambda, terintegrasi dengan RDS dan S3 untuk mengaktifkan backend yang skalabel dan aman untuk platform e-commerce tiruan. Berfokus pada pengembangan API, desain database, dan praktik otentikasi yang aman.', role: 'Peserta' },
+                { year: 2024, title: 'DBS Front end 2024', desc: 'Berkolaborasi dalam tim 4 orang untuk merancang dan menerapkan antarmuka aplikasi penganggaran responsif menggunakan React.js, meningkatkan aksesibilitas pengguna di perangkat seluler dan desktop. Berfokus pada pemecahan masalah dan kolaborasi dalam pengembangan frontend.', role: 'Peserta' },
+                { year: 2024, title: 'Panitia Spark Saintek 2024', desc: 'Menjabat sebagai Koordinator Dana Usaha, berhasil mengkoordinasikan upaya penggalangan dana untuk acara fakultas, mencapai target yang ditetapkan.', role: 'Koor. Dana Usaha' },
+                { year: 2024, title: 'MSIB - Bangkit Academy Cohort - Machine Learning', desc: 'Mendapatkan pengetahuan komprehensif dalam konsep Machine Learning, termasuk supervised dan unsupervised learning, preprocessing data, dan deployment model. Merekayasa sistem OCR dengan OpenCV dan Tesseract yang mencapai akurasi lebih dari 90% dalam mengekstraksi data keuangan penting dari struk yang dipindai, meningkatkan efisiensi pencatatan pengeluaran. Berkolaborasi dengan tim lintas fungsi dari Cloud Computing dan Mobile Development untuk membangun solusi end-to-end. Menyelesaikan lebih dari 30+ tantangan algoritmik dan menerapkan teori ML pada masalah dunia nyata selama capstone dan mentorship, meningkatkan pemecahan masalah praktis di bawah batasan waktu.', role: 'Machine Learning Cohort' },
+                { year: 2023, title: 'HIMA Teknik Informatika 2023/2024', desc: 'Anggota Divisi Hubungan Masyarakat, mengembangkan dan mengimplementasikan strategi komunikasi yang efektif untuk meningkatkan visibilitas asosiasi dan meningkatkan keterlibatan anggota sebesar 25% melalui pesan yang ditargetkan dan platform interaktif. Berkoordinasi dengan organisasi eksternal, termasuk 10+ asosiasi mahasiswa Teknik Informatika dari kampus lain, untuk membangun peluang kolaborasi dan menyelenggarakan 3 acara networking, yang menguntungkan lebih dari 150 anggota. Mengorganisir kunjungan industri ke Dinas Komunikasi dan Informatika (Diskominfo) Kota Sukabumi, memberikan 20+ anggota wawasan praktis tentang praktik industri dan membina koneksi profesional dengan pemangku kepentingan utama.', role: 'Anggota Humas' },
+                { year: 2023, title: 'BEM F. Saintek 2023/2024', desc: 'Anggota Kajian Keilmuan dan Advokasi, melakukan studi isu untuk mengumpulkan dan menganalisis aspirasi dan kekhawatiran mahasiswa, memberikan wawasan untuk upaya advokasi. Berfungsi sebagai sumber informasi beasiswa, membantu mahasiswa mengakses peluang baik di dalam maupun di luar kampus. Membantu mahasiswa yang menghadapi masa percobaan akademik dengan memberikan panduan dan sumber daya untuk peningkatan akademik.', role: 'Anggota Divisi' },
+                { year: 2023, title: 'MASFAK 2023', desc: 'Anggota Divisi Acara, berperan dalam perencanaan dan pelaksanaan acara orientasi mahasiswa baru, memastikan kelancaran kegiatan.', role: 'Anggota Divisi' },
+                { year: 2023, title: 'Panitia MOTIF 2023', desc: 'Anggota Divisi Konsumsi, memastikan ketersediaan konsumsi yang memadai dan terorganisir selama acara berlangsung.', role: 'Anggota Divisi' },
+                { year: 2023, title: 'Panitia HARTIK 2023', desc: 'Anggota Divisi Acara, membantu suksesnya acara tahunan fakultas dengan koordinasi yang baik dan pelaksanaan yang efektif.', role: 'Anggota Divisi' },
+                { year: 2023, title: 'SIC (Samsung Innovation Campus) 2023/2024', desc: 'Mengikuti program coding dan programming, mengembangkan kemampuan teknis dan pemecahan masalah melalui kurikulum terstruktur.', role: 'Peserta' },
+                { year: 2022, title: 'Relawan Siaga Bencana', desc: 'Memberikan kontribusi nyata dalam kegiatan kemanusiaan dan penanggulangan bencana, menunjukkan kepedulian sosial.', role: 'Relawan' },
+                { year: 2022, title: 'RTL (Rencana Tindak Lanjut)', desc: 'Berpartisipasi dalam program pengembangan diri dan perencanaan karir, mengidentifikasi tujuan dan langkah-langkah pencapaian.', role: 'Peserta' }
+            ];
+
+            function createTimeline(containerId, data) {
+                const container = document.getElementById(containerId);
+                const years = [...new Set(data.map(item => item.year))].sort((a, b) => b - a);
+
+                let timelineHTML = `<div class="flex justify-center mb-8 space-x-2 md:space-x-4">`;
+                years.forEach((year, index) => {
+                    timelineHTML += `<button class="year-btn px-4 py-2 rounded-full text-sm font-semibold transition ${index === 0 ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}" data-year="${year}" data-container="${containerId}">${year}</button>`;
+                });
+                timelineHTML += `</div>`;
+
+                years.forEach((year, index) => {
+                    const itemsForYear = data.filter(item => item.year === year);
+                    timelineHTML += `<div id="${containerId}-${year}" class="year-content ${index !== 0 ? 'hidden' : ''}">`;
+                    itemsForYear.forEach(item => {
+                        const isProject = 'tags' in item;
+                        timelineHTML += `
+                            <div class="timeline-item relative pl-10 pb-8">
+                                <div class="timeline-dot w-5 h-5 bg-white border-2 border-[#C5A48A] rounded-full"></div>
+                                <div class="card p-6 rounded-lg shadow-sm">
+                                    <p class="text-sm font-semibold text-[#C5A48A]">${isProject ? item.tags.join(' · ') : item.role}</p>
+                                    <h3 class="text-lg font-bold mt-1 text-gray-900">${item.title}</h3>
+                                    <p class="mt-2 text-gray-600">${item.desc}</p>
+                                    ${item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="text-[#C5A48A] hover:underline text-sm mt-2 inline-block mr-4">Lihat Proyek</a>` : ''}
+                                    ${item.certificate ? `<a href="${item.certificate}" target="_blank" rel="noopener noreferrer" class="text-[#C5A48A] hover:underline text-sm mt-2 inline-block mr-4">Lihat Sertifikat</a>` : ''}
+                                    ${item.documentation ? `<a href="${item.documentation}" target="_blank" rel="noopener noreferrer" class="text-[#C5A48A] hover:underline text-sm mt-2 inline-block">Lihat Dokumentasi</a>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    timelineHTML += `</div>`;
+                });
+
+                container.innerHTML = timelineHTML;
+            }
+
+            createTimeline('projects-timeline', projectsData);
+            createTimeline('experience-timeline', experienceData);
+
+            document.querySelectorAll('.year-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const year = this.dataset.year;
+                    const containerId = this.dataset.container;
+
+                    document.querySelectorAll(`#${containerId} .year-btn`).forEach(btn => {
+                        btn.classList.remove('bg-gray-800', 'text-white');
+                        btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                    });
+                    this.classList.add('bg-gray-800', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                    
+                    document.querySelectorAll(`#${containerId} .year-content`).forEach(content => {
+                        content.classList.add('hidden');
+                    });
+
+                    document.getElementById(`${containerId}-${year}`).classList.remove('hidden');
+                });
+            });
+
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Machine Learning', 'Pengembangan Web', 'Analisis Data', 'Pemrograman', 'Cloud & Tools', 'Soft Skills'],
+                    datasets: [{
+                        label: 'Tingkat Keahlian',
+                        data: [85, 90, 80, 88, 75, 95],
+                        backgroundColor: 'rgba(197, 164, 138, 0.2)',
+                        borderColor: 'rgba(197, 164, 138, 1)',
+                        pointBackgroundColor: 'rgba(197, 164, 138, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(197, 164, 138, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 14,
+                                },
+                                color: '#4A4A4A'
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: '#888',
+                                stepSize: 25
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.r !== null) {
+                                        label += context.parsed.r + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            document.getElementById('year').textContent = new Date().getFullYear();
+
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            window.onscroll = () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 68) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+        });
+    </script>
+</body>
+</html>
