@@ -3,29 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Professional Portfolio</title>
+    <title>Salma Nurfauziah | Portfolio</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <header>
-        <div class="container hero">
-            <h1>Hai, Saya Salma 👋</h1>
-            <p class="subtitle">Tech Community Leader & Management Trainee Enthusiast</p>
-            <p class="bio">Berpengalaman dalam memimpin komunitas teknologi, mengelola proyek, dan mengimplementasikan solusi kecerdasan buatan untuk kebutuhan bisnis.</p>
+    <!-- HERO SECTION -->
+    <header class="hero-section">
+        <div class="container hero-grid">
+            <div class="hero-text">
+                <div class="badge-top">✨ Informatics Engineering Graduate (GPA 3.81/4.00)</div>
+                <h1>Hi, I'm <span class="highlight">Salma Nurfauziah</span></h1>
+                
+                <!-- Tagline Baru Berbasis Data & Strategi -->
+                <p class="tagline">
+                    Bridging <span class="underlined">Data Intelligence</span> and <span class="underlined">Strategic Leadership</span> to Drive High-Impact Business Solutions.
+                </p>
+                
+                <p class="bio">
+                    An analytical Informatics Engineering graduate with a proven track record of managing 13+ cross-functional team members, deploying deep learning models with 95.49% accuracy, and optimizing internal systems to cut manual workloads by 40%. Aspiring to leverage technical precision and structured thinking into impact-driven Management Trainee roles.
+                </p>
+                <div class="hero-cta">
+                    <a href="mailto:salmanurfauziah2005@gmail.com" class="btn btn-primary">Contact Me</a>
+                    <a href="https://linkedin.com/in/salma-nurfauziah/" target="_blank" class="btn btn-secondary">LinkedIn</a>
+                </div>
+            </div>
+            
+            <!-- SLOT FOTO KAMU -->
+            <div class="hero-image-container">
+                <!-- Ganti 'pfp.jpg' dengan file foto formal/semi-formal kamu -->
+                <img src="pfp.jpg" alt="Salma Nurfauziah" class="hero-avatar">
+                <div class="decorated-box"></div>
+            </div>
         </div>
     </header>
 
+    <!-- MAIN PORTFOLIO -->
     <main class="container">
-        <section>
-            <h2>Pengalaman & Kegiatan</h2>
-            <div id="portfolio-container" class="grid-container"></div>
+        <section class="portfolio-section">
+            <div class="section-title-area">
+                <h2>Featured Experiences & Projects</h2>
+                <p>A data-backed look into my technical projects, leadership roles, and community contributions.</p>
+            </div>
+            
+            <!-- Tempat JavaScript menyuntikkan kegiatan secara otomatis -->
+            <div id="portfolio-grid" class="portfolio-grid"></div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 Salma Nurfauziah. Powered by Vercel.</p>
+        <p>&copy; 2026 Salma Nurfauziah. All Rights Reserved. Powered by Vercel.</p>
     </footer>
 
     <script src="script.js"></script>
