@@ -7,7 +7,8 @@ export default function Navbar() {
   const links = [
   ["Work", "/#work"],
   ["Experience", "/#experience"],
-  ["Engineering", "/#engineering"],
+  ["Organizations", "/#organizations"],
+  ["Achievements", "/#achievements"],
   ["About", "/#about"],
   ["Contact", "/#contact"],
 ];
