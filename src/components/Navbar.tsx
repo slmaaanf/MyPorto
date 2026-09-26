@@ -32,7 +32,12 @@ export default function Navbar() {
             </a>
           ))}
 
-          <a className="nav-resume" href="#contact">
+          <a
+            className="nav-resume"
+            href="/resume.pdf"
+            target="_blank"
+            rel="noreferrer"
+          >
             Resume ↗
           </a>
         </div>
@@ -58,12 +63,14 @@ export default function Navbar() {
           ))}
 
           <a
-            className="nav-resume"
-            href="#contact"
-            onClick={() => setOpen(false)}
-          >
-            Resume ↗
-          </a>
+          className="nav-resume"
+          href="/resume.pdf"
+          target="_blank"
+          rel="noreferrer"
+          onClick={() => setOpen(false)}
+        >
+          Resume ↗
+        </a>
         </div>
       </nav>
     </header>
